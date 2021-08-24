@@ -106,16 +106,17 @@ function loadsong() {
   cdThumb.style.backgroundImage = `url(${songs[i].img})`;
   audio.src = songs[i].path;
 }
-function playmusic() {
-  const animate = cdThumb.animate([{ transform: "rotate(360deg)" }], {
+const animate = cdThumb.animate([{ transform: "rotate(360deg)" }], {
     duration: 10000,
     iterations: Infinity,
   });
+  animate.pause();
+function playmusic() {
+  
   volume.onchange = () => {
     const volumechange=volume.value;
     audio.volume = volumechange;
   }
-  animate.pause();
   playsong.onclick = () => {
     if (playing) {
       audio.pause();
@@ -132,7 +133,7 @@ function playmusic() {
       animate.pause();
       playing = false;
     };
-    console.log(audio.volume);
+  };
     audio.ontimeupdate = () => {
       if (audio.duration) {
         let currentprogress = (audio.currentTime / audio.duration) * 100;
@@ -149,7 +150,7 @@ function playmusic() {
       else if (checkRandom) randomMusic();
       else nextmusic();
     };
-  };
+ 
 }
 function nextmusic() {
   i++;
@@ -157,6 +158,11 @@ function nextmusic() {
   loadsong();
   audio.play();
   renderSongs();
+  audio.onplay = () => {
+    player.classList.add("playing");
+    animate.play();
+    playing = true;
+  };
 }
 function prevmusic() {
   i--;
@@ -164,6 +170,11 @@ function prevmusic() {
   loadsong();
   audio.play();
   renderSongs();
+  audio.onplay = () => {
+    player.classList.add("playing");
+    animate.play();
+    playing = true;
+  };
 }
 function addactiverandom() {
   random.onclick = () => {
@@ -196,6 +207,12 @@ function selectMusic() {
       loadsong();
       renderSongs();
       audio.play();
+      audio.onplay = () => {
+        player.classList.add("playing");
+        animate.play();
+        playing = true;
+      };
     }
   };
 }
+
